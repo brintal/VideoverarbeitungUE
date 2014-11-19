@@ -1,5 +1,4 @@
 function [bok,scribble_count, fg_scribbles, histo_fg, histo_bg] = get_histograms(input_directory,file_list)     
-%function [bok,scribble_count, fg_scribbles, histo_fg, histo_bg] = get_histograms(input_directory,file_list,bins) 
     % load reference frame and its foreground and background scribbles
     bok=false;
     scribble_count=0;
@@ -40,12 +39,10 @@ function [bok,scribble_count, fg_scribbles, histo_fg, histo_bg] = get_histograms
     bg_scribbles_map = zeros(m,n);
     for i=1:m
         for j=1:n
-            %we compare the foreground scribbles with the reference frame
-            %and insert a 1 in our scribble map
+            %we compare
             if frames_scribbles(i,j,1,1) ~= reference_frame(i,j,1)
                 fg_scribbles_map(i,j)=1;   
             end
-            %we do the same for the background scribbles
             if frames_scribbles(i,j,1,2) ~= reference_frame(i,j,1)
                 bg_scribbles_map(i,j)=1;   
             end
