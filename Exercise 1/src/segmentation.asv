@@ -4,11 +4,30 @@ function foreground_map = segmentation(frames,FGScribbles,Hfc,Hbc,bins)
     %----------------------------------------------------------------------
    
     
-    %
-    CostVol = Hfc(2)/(Hfc(2)+Hbc(2));
-    
-    disp(CostVol);
+    %Das Funktioniert noch nicht! Keine Ahnung wie das geht :(
 
+    [m,n,o]=size(frames(:,:,1));
+    for i=11:11
+        for j=1:n
+            imr=double(frames(i,j,1,1));%*255+1;
+            img=double(frames(i,j,2,1));%*255+1;
+            imb=double(frames(i,j,3,1));%*255+1;
+            f=double(bins)/256.0;
+            relevantID=floor(imr*f) + floor(img*f)*bins + floor(imb*f)*bins*bins+1; 
+
+            %disp(Hfc(relevantID));
+            %disp(Hbc(relevantID));
+            if (( (Hfc(relevantID)/(Hfc(relevantID)+Hbc(relevantID))))>0.5)
+                foreground_map(i,j,:,1) = frames(i,j,:,1);
+                
+            end
+            
+            
+        end
+    end
+    imag(foreground_map);
+    %image (foreground_map(:,:,1,:));
+    
     
     %----------------------------------------------------------------------
     % Task e: Filter cost-volume with guided filter

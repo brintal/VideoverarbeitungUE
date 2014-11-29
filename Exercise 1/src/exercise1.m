@@ -27,7 +27,7 @@ function exercise1(input_directory, output_directory, file_extension)
     % Task a+b: get foreground and background histograms 
     %----------------------------------------------------------------------
     bok = false;
-    bins = 10;
+    bins = 3;
     % call function get_histograms 
     % [return parameters]=get_histograms(parameters,...);
     % exercise1('../fg_frames/','../output_fg_map/','png');
