@@ -7,6 +7,7 @@ function foreground_map = segmentation(frames,FGScribbles,Hfc,Hbc,bins)
     %ACHTUNG: Wird im Moment nur für den ersten Frame berechnet! Schleife fehlt
     %noch!
     [m,n,o]=size(frames(:,:,1));
+    foreground_map = zeros(m,n,o);
     for i=1:m
         for j=1:n
             
@@ -26,21 +27,37 @@ function foreground_map = segmentation(frames,FGScribbles,Hfc,Hbc,bins)
                 foreground_map(i,j,2,1) = double(frames(i,j,2,1))/256.0;
                 foreground_map(i,j,3,1) = double(frames(i,j,3,1))/256.0;
             end
+            
+            
+            %Wir erstellen eine 3 dimensionale Matrix mit der cost-volume
+            %information für jeden einzelnen pixel. Muss einkommentiert werden. 
+            %Benötigt zum Aufrufen des Guidedfilters (siehe unten)
+%              foreground_map(i,j,1) =  Hfc(relevantBin)/(Hfc(relevantBin)+Hbc(relevantBin));
+
         end
     end
-    %image (foreground_map(:,:,:,1));
+    image (foreground_map(:,:,:,1));
     
     
     %----------------------------------------------------------------------
     % Task e: Filter cost-volume with guided filter
     %----------------------------------------------------------------------
     
-    %da hats noch irgendwas aber prinzipiell laeuft der filter durch.
-    vidDst = boxfilter_vid(foreground_map, 3, 1)
-    vidDst(:,:,1,:)=double(vidDst(:,:,1,:))/256.0;
-    vidDst(:,:,2,:)=double(vidDst(:,:,2,:))/256.0;
-    vidDst(:,:,3,:)=double(vidDst(:,:,3,:))/256.0;
-    image (vidDst(:,:,:,1));
+    %Direktes Aufrufen des Boxfilters funktioniert, muss aber durch den
+    %Auruf von guidedfilter_vid_color ersetzt werden.
+%     vidDst = boxfilter_vid(foreground_map, 3, 1)
+%     vidDst(:,:,1,:)=double(vidDst(:,:,1,:))/256.0;
+%     vidDst(:,:,2,:)=double(vidDst(:,:,2,:))/256.0;
+%     vidDst(:,:,3,:)=double(vidDst(:,:,3,:))/256.0;
+%     image (vidDst(:,:,:,1));
+        
+    %Hier muss der guidedfilter in irgendeiner Art aufgerufen werden. Das
+    %funktioniert aber noch nicht!
+    %eps = 0.1^2;
+    %vidDst = guidedfilter_vid_color(frames, foreground_map, 3, 1, eps);
+
+    
+    
     
     %----------------------------------------------------------------------
     % Task f: delete regions which are not connected to foreground scribble
