@@ -4,9 +4,10 @@ function foreground_map = segmentation(frames,FGScribbles,Hfc,Hbc,bins)
     %----------------------------------------------------------------------
    
     
-    %Das Funktioniert noch nicht! Keine Ahnung wie das geht :(
-    CostVol = Hfc(1)/(Hfc(1)+Hbc(1));
-    %disp(CostVol);
+    %
+    CostVol = Hfc(2)/(Hfc(2)+Hbc(2));
+    
+    disp(CostVol);
 
     
     %----------------------------------------------------------------------

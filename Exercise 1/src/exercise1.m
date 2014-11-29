@@ -27,14 +27,16 @@ function exercise1(input_directory, output_directory, file_extension)
     % Task a+b: get foreground and background histograms 
     %----------------------------------------------------------------------
     bok = false;
+    bins = 10;
     % call function get_histograms 
     % [return parameters]=get_histograms(parameters,...);
     % exercise1('../fg_frames/','../output_fg_map/','png');
-    [bok,scribble_count, fg_scribbles, histo_fg, histo_bg] = get_histograms('../fg_frames/', file_list);
+    [bok,scribble_count, fg_scribbles, histo_fg, histo_bg] = get_histograms('../fg_frames/', file_list, bins);
     if (~bok)
         disp(['No scribble or no reference frame found in input directory ' input_directory '!'])
         return;
     end 
+    
     
     frames = [];
     count=0;
@@ -47,44 +49,46 @@ function exercise1(input_directory, output_directory, file_extension)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 %
 %
-%     for j = 1:(numel(file_list))
-%         frame_name = file_list(j).name;
-% 
-%         % skip scribble and reference files
-%         if ((strcmp(frame_name(1),'s') == 1) || (strcmp(frame_name(1),'r') == 1)) 
-%             continue; 
-%         end;
-%             
-%         frame = imread([input_directory '/' frame_name]); %read image  
-%         
-%         count = count+1;
-%         
-%         % cache frames
-%         frames(:,:,:,count) = uint8(frame(:,:,:)); 
-%               
-% 
-%         % every <loop_size> frames run segmentation
-%         if (((mod(count, loop_size)) == 0) || (j==(numel(file_list)-3)))
-%             %--------------------------------------------------------------
-%             % Task c: Generate Cost-Volume 
-%             %--------------------------------------------------------------
-%             % call function segmentation 
-%             % return parameter=segmentation(parameters,...);
-% 
-%             % store frames
-%             for i = 1:size(frames,4)    
+    for j = 1:(numel(file_list))
+        frame_name = file_list(j).name;
+
+        % skip scribble and reference files
+        if ((strcmp(frame_name(1),'s') == 1) || (strcmp(frame_name(1),'r') == 1)) 
+            continue; 
+        end;
+            
+        frame = imread([input_directory '/' frame_name]); %read image  
+        
+        count = count+1;
+        
+        % cache frames
+        frames(:,:,:,count) = uint8(frame(:,:,:)); 
+              
+
+        % every <loop_size> frames run segmentation
+        if (((mod(count, loop_size)) == 0) || (j==(numel(file_list)-3)))
+            %--------------------------------------------------------------
+            % Task c: Generate Cost-Volume 
+            %--------------------------------------------------------------
+            % call function segmentation 
+            % return parameter=segmentation(parameters,...);
+
+            foreground_Map = segmentation(frames,fg_scribbles,histo_fg,histo_bg,bins);
+            
+            % store frames
+            for i = 1:size(frames,4)    
 %                 framecount=(loop_cnt*loop_size)+i;
 %                 frame_number = int2str(framecount); 
 %                 frame_str    = '00000';  
 %                 frame_str(end-numel(frame_number)+1:end) = frame_number;  
 %                 imwrite(foreground_Map(:,:,i), sprintf('%s/frame%s.%s', output_directory, frame_str, file_extension));
 %                 disp(sprintf('Storing frame [%d]', framecount));                                              
-%             end
-% 
-%             loop_cnt=loop_cnt+1;
-%             count=0;
-%             frames=[];
-%         end
-%     end
+            end
+
+            loop_cnt=loop_cnt+1;
+            count=0;
+            frames=[];
+        end
+    end
 end
 

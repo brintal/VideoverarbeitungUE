@@ -1,7 +1,5 @@
-function [bok,scribble_count, fg_scribbles, histo_fg, histo_bg] = get_histograms(input_directory,file_list)     
-%function [bok,scribble_count, fg_scribbles, histo_fg, histo_bg] = get_histograms(input_directory,file_list,bins) 
+function [bok,scribble_count, fg_scribbles, histo_fg, histo_bg] = get_histograms(input_directory,file_list,bins) 
     % load reference frame and its foreground and background scribbles
-    bins=5;
     bok=false;
     scribble_count=0;
     reference_frame=[];
@@ -66,8 +64,8 @@ function [bok,scribble_count, fg_scribbles, histo_fg, histo_bg] = get_histograms
     end 
     %disp(bg_scribbles_map);
     
-    count=colHist(fg_scribbles_colors(:,1),fg_scribbles_colors(:,2),fg_scribbles_colors(:,3),bins);
-    count=colHist(bg_scribbles_colors(:,1),bg_scribbles_colors(:,2),bg_scribbles_colors(:,3),bins);
+    histo_fg=colHist(fg_scribbles_colors(:,1),fg_scribbles_colors(:,2),fg_scribbles_colors(:,3),bins);
+    histo_bg=colHist(bg_scribbles_colors(:,1),bg_scribbles_colors(:,2),bg_scribbles_colors(:,3),bins);
 
     %disp(count);
     %----------------------------------------------------------------------
