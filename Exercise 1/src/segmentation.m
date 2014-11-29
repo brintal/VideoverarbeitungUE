@@ -28,13 +28,19 @@ function foreground_map = segmentation(frames,FGScribbles,Hfc,Hbc,bins)
             end
         end
     end
-    image (foreground_map(:,:,:,1));
+    %image (foreground_map(:,:,:,1));
     
     
     %----------------------------------------------------------------------
     % Task e: Filter cost-volume with guided filter
     %----------------------------------------------------------------------
- 
+    
+    %da hats noch irgendwas aber prinzipiell laeuft der filter durch.
+    vidDst = boxfilter_vid(foreground_map, 3, 1)
+    vidDst(:,:,1,:)=double(vidDst(:,:,1,:))/256.0;
+    vidDst(:,:,2,:)=double(vidDst(:,:,2,:))/256.0;
+    vidDst(:,:,3,:)=double(vidDst(:,:,3,:))/256.0;
+    image (vidDst(:,:,:,1));
     
     %----------------------------------------------------------------------
     % Task f: delete regions which are not connected to foreground scribble
