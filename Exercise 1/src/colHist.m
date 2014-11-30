@@ -11,6 +11,6 @@ function count=colHist(imr,img,imb,bins)
     count = histc(IDs(:),1:maxID);
     figure, bar(1:maxID,count/sum(count)), title('normal');
 
-    fprintf('histogram check: %d=%d bins:1-%d\n', sum(count),length(imr(:)),maxID);
+    %fprintf('histogram check: %d=%d bins:1-%d\n', sum(count),length(imr(:)),maxID);
 end
 

@@ -63,6 +63,7 @@ function [bok,scribble_count, fg_scribbles, histo_fg, histo_bg] = get_histograms
         end
     end 
     %disp(bg_scribbles_map);
+    fg_scribbles=fg_scribbles_map;
     
     histo_fg=colHist(fg_scribbles_colors(:,1),fg_scribbles_colors(:,2),fg_scribbles_colors(:,3),bins);
     histo_bg=colHist(bg_scribbles_colors(:,1),bg_scribbles_colors(:,2),bg_scribbles_colors(:,3),bins);
