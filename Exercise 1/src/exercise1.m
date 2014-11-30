@@ -27,7 +27,7 @@ function exercise1(input_directory, output_directory, file_extension)
     % Task a+b: get foreground and background histograms 
     %----------------------------------------------------------------------
     bok = false;
-    bins = 3;
+    bins = 20;
     % call function get_histograms 
     % [return parameters]=get_histograms(parameters,...);
     % exercise1('../fg_frames/','../output_fg_map/','png');
@@ -41,7 +41,7 @@ function exercise1(input_directory, output_directory, file_extension)
     frames = [];
     count=0;
     loop_cnt = 0;
-    loop_size= 10;
+    loop_size= 3;
 
     
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%    
@@ -77,12 +77,12 @@ function exercise1(input_directory, output_directory, file_extension)
             
             % store frames
             for i = 1:size(frames,4)    
-%                 framecount=(loop_cnt*loop_size)+i;
-%                 frame_number = int2str(framecount); 
-%                 frame_str    = '00000';  
-%                 frame_str(end-numel(frame_number)+1:end) = frame_number;  
-%                 imwrite(foreground_Map(:,:,i), sprintf('%s/frame%s.%s', output_directory, frame_str, file_extension));
-%                 disp(sprintf('Storing frame [%d]', framecount));                                              
+                framecount=(loop_cnt*loop_size)+i;
+                frame_number = int2str(framecount); 
+                frame_str    = '00000';  
+                frame_str(end-numel(frame_number)+1:end) = frame_number;  
+                imwrite(foreground_Map(:,:,i), sprintf('%s/frame%s.%s', output_directory, frame_str, file_extension));
+                disp(sprintf('Storing frame [%d]', framecount));                                              
             end
 
             loop_cnt=loop_cnt+1;

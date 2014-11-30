@@ -66,20 +66,28 @@ function foreground_map = segmentation(frames,FGScribbles,Hfc,Hbc,bins)
     eps = 0.1^2;
     vidDst = guidedfilter_vid_color(frames, foreground_map, 3, 1, eps);
     vidDst(isnan(vidDst))=0;
-    vidDst=floor(vidDst.*1.99);
+    thresholdVal=8;
+    vidDst=floor(vidDst.*thresholdVal);
+    vidDst=ceil(vidDst.*(1/thresholdVal));
     
     
     %----------------------------------------------------------------------
     % Task f: delete regions which are not connected to foreground scribble
     %----------------------------------------------------------------------
     
-    connected_vidDst=keepConnected(vidDst(:,:,:,1),FGScribbles);
-    image(connected_vidDst);
+    connected_vidDst=keepConnected(vidDst(:,:,:),FGScribbles);
+
     
     %----------------------------------------------------------------------
     % Task g: Guided feathering
     %----------------------------------------------------------------------
-    foreground_map=[];
+    vidDst = guidedfilter_vid_color(frames, connected_vidDst, 3, 1, eps);
+    vidDst(isnan(vidDst))=0;
+    vidDst=floor(vidDst.*thresholdVal);
+    vidDst=ceil(vidDst.*(1/thresholdVal));
+    
+    imshow (vidDst(:,:,2));
+    foreground_map=vidDst;
     
     
 end

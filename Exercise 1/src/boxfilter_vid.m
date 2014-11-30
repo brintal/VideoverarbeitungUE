@@ -17,22 +17,22 @@ function vidDst = boxfilter_vid(vidSrcC, r, rt)
         
         
         
-            for i=1:rt
-        % difference over Y axis
-        imDst(1:r+1, :, i) = imCum(1+r:2*r+1, :, i);
-        imDst(r+2:hei-r, :, i) = imCum(2*r+2:hei, :, i) - imCum(1:hei-2*r-1, :, i);
-        imDst(hei-r+1:hei, :, i) = repmat(imCum(hei, :, i), [r, 1]) - imCum(hei-2*r:hei-r-1, :, i);
+        for i=1:rt
+            % difference over Y axis
+            imDst(1:r+1, :, i) = imCum(1+r:2*r+1, :, i);
+            imDst(r+2:hei-r, :, i) = imCum(2*r+2:hei, :, i) - imCum(1:hei-2*r-1, :, i);
+            imDst(hei-r+1:hei, :, i) = repmat(imCum(hei, :, i), [r, 1]) - imCum(hei-2*r:hei-r-1, :, i);
 
-        % cumulative sum over X axis
-        imCum = cumsum(imDst, 2);
-        % difference over Y axis
-        imDst(:, 1:r+1,i) = imCum(:, 1+r:2*r+1,i);
-        imDst(:, r+2:wid-r,i) = imCum(:, 2*r+2:wid,i) - imCum(:, 1:wid-2*r-1,i);
-        imDst(:, wid-r+1:wid,i) = repmat(imCum(:, wid,i), [1, r]) - imCum(:, wid-2*r:wid-r-1,i);
-        
-        vidDst(:,:,i)=imDst(:,:,i);
+            % cumulative sum over X axis
+            imCum = cumsum(imDst, 2);
+            % difference over Y axis
+            imDst(:, 1:r+1,i) = imCum(:, 1+r:2*r+1,i);
+            imDst(:, r+2:wid-r,i) = imCum(:, 2*r+2:wid,i) - imCum(:, 1:wid-2*r-1,i);
+            imDst(:, wid-r+1:wid,i) = repmat(imCum(:, wid,i), [1, r]) - imCum(:, wid-2*r:wid-r-1,i);
+
+            vidDst(:,:,i)=imDst(:,:,i);
     
-    end
+        end
     %----------------------------------------------------------------------
     % Task d.	Extension of the guided image filter to a guided video 
     %           filter
