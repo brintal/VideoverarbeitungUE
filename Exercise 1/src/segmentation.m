@@ -64,9 +64,9 @@ function foreground_map = segmentation(frames,FGScribbles,Hfc,Hbc,bins)
     %Hier muss der guidedfilter in irgendeiner Art aufgerufen werden. Das
     %funktioniert aber noch nicht!
     eps = 0.1^2;
-    vidDst = guidedfilter_vid_color(frames, foreground_map, 3, 1, eps);
+    vidDst = guidedfilter_vid_color(frames, foreground_map, 3, 10, eps);
     vidDst(isnan(vidDst))=0;
-    thresholdVal=8;
+    thresholdVal=6;
     vidDst=floor(vidDst.*thresholdVal);
     vidDst=ceil(vidDst.*(1/thresholdVal));
     
@@ -81,7 +81,7 @@ function foreground_map = segmentation(frames,FGScribbles,Hfc,Hbc,bins)
     %----------------------------------------------------------------------
     % Task g: Guided feathering
     %----------------------------------------------------------------------
-    vidDst = guidedfilter_vid_color(frames, connected_vidDst, 3, 1, eps);
+    vidDst = guidedfilter_vid_color(frames, connected_vidDst, 3, 10, eps);
     vidDst(isnan(vidDst))=0;
     vidDst=floor(vidDst.*thresholdVal);
     vidDst=ceil(vidDst.*(1/thresholdVal));

@@ -11,13 +11,15 @@ function vidDst = boxfilter_vid(vidSrcC, r, rt)
     
     
 
-        imDst = zeros(size(vidSrcC));
-        % cumulative sum over Y axis
-        imCum = cumsum(vidSrcC, 1);
         
         
         
         for i=1:rt
+
+            imDst = zeros(size(vidSrcC));
+            % cumulative sum over Y axis
+            imCum = cumsum(vidSrcC, 1);
+
             % difference over Y axis
             imDst(1:r+1, :, i) = imCum(1+r:2*r+1, :, i);
             imDst(r+2:hei-r, :, i) = imCum(2*r+2:hei, :, i) - imCum(1:hei-2*r-1, :, i);

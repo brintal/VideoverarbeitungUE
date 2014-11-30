@@ -27,10 +27,15 @@ function exercise1(input_directory, output_directory, file_extension)
     % Task a+b: get foreground and background histograms 
     %----------------------------------------------------------------------
     bok = false;
-    bins = 20;
+    
+    %20 bins hat sich als guter Wert herausgestellt weswegen er hier
+    %gewählt wird.
+    bins = 10;
     % call function get_histograms 
     % [return parameters]=get_histograms(parameters,...);
-    % exercise1('../fg_frames/','../output_fg_map/','png');
+
+    %Funktion get_histograms liefert 2 Histogramme: Vordergrund und
+    %Hintergrund
     [bok,scribble_count, fg_scribbles, histo_fg, histo_bg] = get_histograms('../fg_frames/', file_list, bins);
     if (~bok)
         disp(['No scribble or no reference frame found in input directory ' input_directory '!'])
@@ -41,7 +46,7 @@ function exercise1(input_directory, output_directory, file_extension)
     frames = [];
     count=0;
     loop_cnt = 0;
-    loop_size= 3;
+    loop_size= 10;
 
     
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%    
