@@ -6,8 +6,8 @@ function [bok,scribble_count, fg_scribbles, histo_fg, histo_bg] = get_histograms
     fg_scribbles=[];
     histo_fg=[];
     histo_bg=[];
-    for j = 1:numel(file_list)
-        frame_name = file_list(j).name;
+    for countX = 1:numel(file_list)
+        frame_name = file_list(countX).name;
 
         if (strcmp(frame_name(1),'s') == 1) % scribble files begin with s
            frame = imread([input_directory '/' frame_name]); %read image      
@@ -27,51 +27,43 @@ function [bok,scribble_count, fg_scribbles, histo_fg, histo_bg] = get_histograms
     end;
     
 
-    %----------------------------------------------------------------------
-    % Task a: Filter user scribbles to indicate foreground and background   
-    %----------------------------------------------------------------------
-
-    
-    %We create two arrays (foreground, background) with the same size as
-    %the reference frame. Initially both arrays are filled with zeros. 
-    [m,n,o]=size(reference_frame);
-    fg_scribbles_map = zeros(m,n);
+    %Wir erzeugen zwei Arrays für Vordergrund und Hintergrund die gleich
+    %groß sind wie der Reference-Frame. Initial werden diese mit Nullen
+    %gefüllt.
+    [sizeY,sizeX,sizeCol]=size(reference_frame);
+    fg_scribbles_map = zeros(sizeY,sizeX);
     fg_scribbles_colors = [];
-    bg_scribbles_map = zeros(m,n);
+    bg_scribbles_map = zeros(sizeY,sizeX);
     bg_scribbles_colors = [];
-    k = 1;
-    l = 1;
-    for i=1:m
-        for j=1:n
-            %we compare the foreground scribbles with the reference frame
-            %and insert a 1 in our scribble map
-            if frames_scribbles(i,j,1,1) ~= reference_frame(i,j,1)
-                fg_scribbles_map(i,j)=1;  
-                fg_scribbles_colors(k,1)=reference_frame(i,j,1);
-                fg_scribbles_colors(k,2)=reference_frame(i,j,2);
-                fg_scribbles_colors(k,3)=reference_frame(i,j,3);
-                k = k+1;
+    fgCounter = 1;
+    bgCounter = 1;
+    for countY=1:sizeY
+        for countX=1:sizeX
+            %Wir vergleichen die Foreground-Scribbles mit dem Reference
+            %Frame und fügen eine 1 in die scribbles-map ein
+            if frames_scribbles(countY,countX,1,1) ~= reference_frame(countY,countX,1)
+                fg_scribbles_map(countY,countX)=1;  
+                fg_scribbles_colors(fgCounter,1)=reference_frame(countY,countX,1);
+                fg_scribbles_colors(fgCounter,2)=reference_frame(countY,countX,2);
+                fg_scribbles_colors(fgCounter,3)=reference_frame(countY,countX,3);
+                fgCounter = fgCounter+1;
             end
-            %we do the same for the background scribbles
-            if frames_scribbles(i,j,1,2) ~= reference_frame(i,j,1)
-                bg_scribbles_map(i,j)=1;   
-                bg_scribbles_colors(l,1)=reference_frame(i,j,1);
-                bg_scribbles_colors(l,2)=reference_frame(i,j,2);
-                bg_scribbles_colors(l,3)=reference_frame(i,j,3);
-                l = l+1;
+            %Das gleiche machen wir für den Hintergrund
+            if frames_scribbles(countY,countX,1,2) ~= reference_frame(countY,countX,1)
+                bg_scribbles_map(countY,countX)=1;   
+                bg_scribbles_colors(bgCounter,1)=reference_frame(countY,countX,1);
+                bg_scribbles_colors(bgCounter,2)=reference_frame(countY,countX,2);
+                bg_scribbles_colors(bgCounter,3)=reference_frame(countY,countX,3);
+                bgCounter = bgCounter+1;
             end
         end
     end 
-    %disp(bg_scribbles_map);
-    fg_scribbles=fg_scribbles_map;
+
     
+    %Rückgabe-Werte setzen
+    fg_scribbles=fg_scribbles_map;  
     histo_fg=colHist(fg_scribbles_colors(:,1),fg_scribbles_colors(:,2),fg_scribbles_colors(:,3),bins);
     histo_bg=colHist(bg_scribbles_colors(:,1),bg_scribbles_colors(:,2),bg_scribbles_colors(:,3),bins);
 
-    %disp(count);
-    %----------------------------------------------------------------------
-    % Task b: Generate color models for foreground and background
-    %----------------------------------------------------------------------
-    
     
 end

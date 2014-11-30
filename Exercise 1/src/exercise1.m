@@ -22,17 +22,12 @@ function exercise1(input_directory, output_directory, file_extension)
         return;
     end
  
-    
-    %----------------------------------------------------------------------
-    % Task a+b: get foreground and background histograms 
-    %----------------------------------------------------------------------
+
     bok = false;
     
-    %20 bins hat sich als guter Wert herausgestellt weswegen er hier
+    %10 bins haben sich als guter Wert herausgestellt weswegen er hier
     %gewählt wird.
     bins = 10;
-    % call function get_histograms 
-    % [return parameters]=get_histograms(parameters,...);
 
     %Funktion get_histograms liefert 2 Histogramme: Vordergrund und
     %Hintergrund
@@ -48,12 +43,7 @@ function exercise1(input_directory, output_directory, file_extension)
     loop_cnt = 0;
     loop_size= 10;
 
-    
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%    
-%     COMMENTED OUT FOR THE FIRST TASKS       %  
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
-%
-%
+
     for j = 1:(numel(file_list))
         frame_name = file_list(j).name;
 
@@ -72,12 +62,9 @@ function exercise1(input_directory, output_directory, file_extension)
 
         % every <loop_size> frames run segmentation
         if (((mod(count, loop_size)) == 0) || (j==(numel(file_list)-3)))
-            %--------------------------------------------------------------
-            % Task c: Generate Cost-Volume 
-            %--------------------------------------------------------------
-            % call function segmentation 
-            % return parameter=segmentation(parameters,...);
-
+            
+            %Funktion segmentation generiert 3-dimensionale Matrix mit den
+            %Vordergrund-Maps für jeden einzelnen Frame
             foreground_Map = segmentation(frames,fg_scribbles,histo_fg,histo_bg,bins);
             
             % store frames

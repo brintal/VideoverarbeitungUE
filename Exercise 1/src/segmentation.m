@@ -4,89 +4,68 @@ function foreground_map = segmentation(frames,FGScribbles,Hfc,Hbc,bins)
     %----------------------------------------------------------------------
    
     
-    %ACHTUNG: Wird im Moment nur für den ersten Frame berechnet! Schleife fehlt
-    %noch!
-    [m,n,o,p]=size(frames(:,:,:,:));
-    foreground_map = zeros(m,n,o);
-    foreground_map_new = zeros(m,n,o);    
+    [sizeY,sizeX,sizeCol,sizeFrame]=size(frames(:,:,:,:));
+    foreground_map = zeros(sizeY,sizeX,sizeCol);   
     
-    %ACHTUNG MUSS ENTFERNT WERDEN
-    %p=1;
     
-    for h=1:p
-        for i=1:m
-            for j=1:n
+    
+    %Zum Berechnen der Cost-Volume Matrix müssen wir für jeden Frame jeden
+    %einzelnen Pixel durchgehen und für diesen die Cost-Volume berechnen.
+    for counterFrame=1:sizeFrame
+        for counterY=1:sizeY
+            for counterX=1:sizeX
 
                 %Zuerst müssen wir uns für den Farbwert jedes Pixels den
                 %entsprechenden "Bin" suchen wo der Farbwert enthalten ist
-                imr=double(frames(i,j,1,h));
-                img=double(frames(i,j,2,h));
-                imb=double(frames(i,j,3,h));
+                imr=double(frames(counterY,counterX,1,counterFrame));
+                img=double(frames(counterY,counterX,2,counterFrame));
+                imb=double(frames(counterY,counterX,3,counterFrame));
                 f=double(bins)/256.0;
                 relevantBin=floor(imr*f) + floor(img*f)*bins + floor(imb*f)*bins*bins+1; 
 
-                %diesen Bin verwenden wir um die volume-cost zu berechnen und
-                %zu überprüfen ob es sich um Teil des Vordergrunds handelt.
-                %Falls ja speichern wir den Pixel in die foreground_map
-
-    %             if (( (Hfc(relevantBin)/(Hfc(relevantBin)+Hbc(relevantBin))))>0.5)
-    %                 foreground_map(i,j,1,1) = double(frames(i,j,1,1))/256.0;
-    %                 foreground_map(i,j,2,1) = double(frames(i,j,2,1))/256.0;
-    %                 foreground_map(i,j,3,1) = double(frames(i,j,3,1))/256.0;    
-    % 
-    %             end
-
+                %Diesen Bin verwenden wir um die volume-cost zu berechnen
                 %Wir erstellen eine 3 dimensionale Matrix mit der cost-volume
-                %information für jeden einzelnen pixel. Muss einkommentiert werden. 
+                %information für jeden einzelnen pixel.
                 %Benötigt zum Aufrufen des Guidedfilters (siehe unten)
-                foreground_map(i,j,h) =  Hfc(relevantBin)/(Hfc(relevantBin)+Hbc(relevantBin)); 
+                foreground_map(counterY,counterX,counterFrame) =  Hfc(relevantBin)/(Hfc(relevantBin)+Hbc(relevantBin)); 
             end
         end
     end
+    
+    %Wir ersetzen alle NaN-Werte durch 0, d.h. weisen sie dem Hintergrund
+    %zu
     foreground_map(isnan(foreground_map))=0;
-    disp(foreground_map);
-    imshow (foreground_map(:,:,1));
-    %foreground_map_new=rgb2gray(foreground_map(:,:,:,1));
-    %image (rgb2gray(foreground_map(:,:,:,1)));
-    
-    %----------------------------------------------------------------------
-    % Task e: Filter cost-volume with guided filter
-    %----------------------------------------------------------------------
-    
-    %Direktes Aufrufen des Boxfilters funktioniert, muss aber durch den
-    %Auruf von guidedfilter_vid_color ersetzt werden.
-     %vidDst = boxfilter_vid(foreground_map, 3, 1)
-     %vidDst(:,:,1,:)=double(vidDst(:,:,1,:))/256.0;
-     %vidDst(:,:,2,:)=double(vidDst(:,:,2,:))/256.0;
-     %vidDst(:,:,3,:)=double(vidDst(:,:,3,:))/256.0;
-     %image (vidDst(:,:,:,1));
+
         
-    %Hier muss der guidedfilter in irgendeiner Art aufgerufen werden. Das
-    %funktioniert aber noch nicht!
+    %Wir verwenden die Cost-Volume-Matrix und die original-Frames zum
+    %Aufruf des Guided Filters.
     eps = 0.1^2;
-    vidDst = guidedfilter_vid_color(frames, foreground_map, 3, 10, eps);
+    rt = sizeFrame;
+    vidDst = guidedfilter_vid_color(frames, foreground_map, 3, rt, eps);
+    
+    %Wir ersetzen wiederum alle NaN-Werte durch 0
     vidDst(isnan(vidDst))=0;
+    
+    %Wir wenden auf die gefilterte Matrix einen Grenzwert an, um entweder 0
+    %oder 1 als Wert zu erhalten.
     thresholdVal=6;
     vidDst=floor(vidDst.*thresholdVal);
     vidDst=ceil(vidDst.*(1/thresholdVal));
     
-    
-    %----------------------------------------------------------------------
-    % Task f: delete regions which are not connected to foreground scribble
-    %----------------------------------------------------------------------
-    
+    %Durch Aufruf von keepConnected werden alle Bereiche die nicht mit dem
+    %FG Scribbles verbunden sind entfernt.
     connected_vidDst=keepConnected(vidDst(:,:,:),FGScribbles);
 
-    
-    %----------------------------------------------------------------------
-    % Task g: Guided feathering
-    %----------------------------------------------------------------------
-    vidDst = guidedfilter_vid_color(frames, connected_vidDst, 3, 10, eps);
+    %Fürs Guided feathering wird der guided filter noch einmal mit den
+    %gleichen Werten aufgerufen, alle NaN-Werte entfernt und mit dem
+    %gleichen Grenzwert gerunded.
+    vidDst = guidedfilter_vid_color(frames, connected_vidDst, 3, rt, eps);
     vidDst(isnan(vidDst))=0;
     vidDst=floor(vidDst.*thresholdVal);
     vidDst=ceil(vidDst.*(1/thresholdVal));
     
-    imshow (vidDst(:,:,2));
+    %Wir setzen die resultierende Matrix mit den Binary Maps als
+    %return-Wert
     foreground_map=vidDst;
     
     
