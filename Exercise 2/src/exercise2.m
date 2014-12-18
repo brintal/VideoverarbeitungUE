@@ -34,14 +34,19 @@ function exercise2(input_directory, output_directory, file_extension)
         % Task a: Compute optical flow vectors
         %------------------------------------------------------------------
         % call function get_opticalflow 
-        % return parameter=get_opticalflow(parameters,...);
+        % return parameter=
+        firstframeGray=rgb2gray(firstframe);
+        secondframeGray=rgb2gray(secondframe);
+        flow=get_opticalflow(firstframeGray,secondframeGray,1,100);
     
         
         %------------------------------------------------------------------
         % Task b+c: Generate new frame
         %------------------------------------------------------------------
         % call function get_inbetween_image 
-        % return parameter=get_inbetween_image(parameters,...);
+        new_image=get_inbetween_image(firstframe,flow(:,:,1),flow(:,:,2));
+        
+        
 
         cnt=cnt+1; imwrite(firstframe,  getFileName(cnt,output_directory,file_extension));
         cnt=cnt+1; imwrite(uint8(new_image),  getFileName(cnt,output_directory,file_extension));

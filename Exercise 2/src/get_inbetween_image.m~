@@ -1,0 +1,36 @@
+
+function new_image = get_inbetween_image(image, u, v)
+    %---------------------------------------------------------------------
+    % Task b: Generate new x- and y-values of new frame
+    %---------------------------------------------------------------------
+    
+    [sizeY,sizeX,sizeCol]=size(image(:,:,:));
+    
+    new_image = zeros(sizeY,sizeX,sizeCol);
+    for y=1:sizeY
+        for x=1:sizeX
+            
+            xOffset=ceil(u(y,x)/2);
+            yOffset=ceil(v(y,x)/2);
+            
+            xVal = x+xOffset;
+            yVal = y+yOffset;
+            
+            if (xVal < 1)
+                xVal = 1;
+            end
+            if (xVal >
+            
+            new_image(yOffset,xOffset,1)=image(y,x,1);
+            new_image(yOffset,xOffset,2)=image(y,x,2);
+            new_image(yOffset,xOffset,3)=image(y,x,3);
+
+        end
+        
+    end
+            
+    %---------------------------------------------------------------------
+    % Task c: Generate new frame
+    %---------------------------------------------------------------------
+
+end

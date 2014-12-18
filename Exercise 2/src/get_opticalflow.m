@@ -24,11 +24,19 @@ for i=1:iterations
     uAvg = getAvg(u);
     vAvg = getAvg(v);
     
+    
+    u= uAvg - ( Fx .* ( ( Fx .* uAvg ) + ( Fy .* vAvg ) + Ft ) ) ./ ( alpha^2 + Fx.^2 + Fy.^2); 
+    v= vAvg - ( Fy .* ( ( Fx .* uAvg ) + ( Fy .* vAvg ) + Ft ) ) ./ ( alpha^2 + Fx.^2 + Fy.^2);
+    
     %----------------------------------------------------------------------
     % Task a: compute optical flow vectors 
     %----------------------------------------------------------------------
 
 end
+%disp(u);
+%disp(v);
+u = medfilt2(u,[15,15]);
+v = medfilt2(v,[15,15]);
 
 %3. return result
 u(isnan(u))=0;
@@ -42,8 +50,8 @@ end
 
 function [Fx,Fy,Ft] = getDerivatives(img1, img2)
     %spatial and temporal derivatives
-    Fx = conv2(img1,0.25* [-1 1; -1 1],'same') + conv2(img2, 0.25*[-1 1; -1 1],'same');
-    Fy = conv2(img1, 0.25*[-1 -1; 1 1], 'same') + conv2(img2, 0.25*[-1 -1; 1 1], 'same');
+    Fx = conv2(img1, 0.25* [-1 1; -1 1],'same') + conv2(img2, 0.25*[-1 1; -1 1],'same');
+    Fy = conv2(img1, 0.25* [-1 -1; 1 1], 'same') + conv2(img2, 0.25*[-1 -1; 1 1], 'same');
     Ft = conv2(img1, 0.25*ones(2),'same') + conv2(img2, -0.25*ones(2),'same');
 end
 
