@@ -8,14 +8,12 @@ function new_image = get_inbetween_image(image, u, v)
     
     new_image = image;  
     
-    %calculate the offset
     xOffset=round(u./2);
     yOffset=round(v./2);
     
-    %calculate the x and y values of the image
+    %calculate the x 
     [oldX,oldY]=meshgrid(1:sizeX,1:sizeY);
     
-    %calculate the new x and y values of the pixels
     newX=oldX+xOffset;
     newY=oldY+yOffset;
     
@@ -43,9 +41,7 @@ function new_image = get_inbetween_image(image, u, v)
     %---------------------------------------------------------------------
     % Task c: Generate new frame
     %---------------------------------------------------------------------
-    
-    %calculating the new image and interpolate the colours for each of the
-    %RGB-channels
+
     new_image=single(new_image);
     new_image(:,:,1)=interp2(oldX,oldY,new_image(:,:,1),newX,newY);
     new_image(:,:,2)=interp2(oldX,oldY,new_image(:,:,2),newX,newY);
